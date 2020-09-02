@@ -14,13 +14,17 @@
                  
                 <div class="form-group">
                     <label class = "form-label">First Name:</label>
-                    {% render_field form.name class="form-control" placeholder="Enter first name .."  %}
+                    {% render_field form.first_name class="form-control" placeholder="Enter first name .."  %}
                 </div>
                  
                 <div class="form-group">
                     <label class = "form-label">Last Name:</label>
-                    {% render_field form.phone class="form-control" placeholder="Enter last name .."  %}
+                    {% render_field form.last_name class="form-control" placeholder="Enter last name .."  %}
                 </div>
+                <div class="form-group">
+                    <label class = "form-label">User Name:</label>
+                    {% render_field form.username class="form-control" placeholder="Enter User name .."  %}
+                </div>                
                  
                 <div class="form-group">
                     <label class = "form-label">Email:</label>
@@ -34,11 +38,14 @@
                     <label class = "form-label">Confrim Passowrd:</label>
                     {% render_field form.password2 type="password" class="form-control" placeholder="Confrm Password "  %}
                 </div>                                                                     
-        
+                {{form.errors}}
                 <input class="btn btn-block btn-info" type="submit" name="Create">                
             </div>
  
         </form>
+        <div class="link">
+            Already have an Account ? Login Here <a  href="{% url 'signin' %}">Login</a>
+        </div>
     </div>
     <div class="col-md-4"></div>
 
