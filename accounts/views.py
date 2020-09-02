@@ -11,6 +11,7 @@ from .models import *
 from .forms import *
 @login_required(login_url='signin')
 def home(request):
+    
     total_orders = Order.objects.all()
     total_customers = Customer.objects.all()
     total_order = total_orders.count()
