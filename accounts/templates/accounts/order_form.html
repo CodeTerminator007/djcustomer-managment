@@ -1,0 +1,25 @@
+{% extends 'accounts/main.html' %}
+{% load static %}
+{% block contents %}
+
+<div class="row">
+    <div class="col-md">
+        <div class="card card-body">
+            <h3 class="card-title"> Create/Update Order :</h3>
+            <hr>
+            <form class="form text-center" action="" method="POST">
+                {% csrf_token %}
+                {% for i  in form %}
+                {{i}}
+                <br>
+                <br>
+
+                {% endfor %}
+                <input class="btn btn-info btn-sm" type="submit" name="submit">
+            </form>
+            
+        </div>
+    </div>
+</div>
+
+{% endblock%}

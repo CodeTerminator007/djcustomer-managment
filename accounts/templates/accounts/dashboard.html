@@ -2,16 +2,55 @@
 
 {% block contents %}
 
+{% include 'accounts/status.html' %} 
 <div class="row">
-    <div class="col-sm-5 "><h1 class="ml-3">Customers </h1></div>
-    <div class="col-sm-2"></div>
-    <div class="col-sm-5 "> <h1 class="ml-3">Products </h1></div>
-</div>
-<div class="row">
-    <div class="col-sm-5 "><h1 class="ml-3"> </h1></div>
-    <div class="col-sm-2"></div>
-    <div class="col-sm-5 "> <h1 class="ml-3"> </h1></div>
-    
+    <div class="col-md-5 "><h4 class="ml-3">Customers: </h4>
+        <hr>
+        <div class="card card-body">
+            <a class="btn btn-outline-primary btn-sm btn-block" href="">Create Customers</a>
+            <table class="table table-sm">
+                <tr>
+                    <th>Profile</th>
+                    <th>Customers</th>
+                    <th>Phone</th>
+                </tr>
+                {% for customer in total_customers%}
+                <tr>
+                    <td> <a class="btn btn-sm btn-info" href="{% url  'customer' customer.id %}"> view</a></td>
+                    <td>{{customer.name}}</td>
+                    <td>{{customer.phone}}</td>
+
+                </tr>
+                {% endfor%}
+
+            </table>
+        </div>
+    </div>
+    <div class="col-md-7 "> <h4 class="ml-3">Last 5 orders: </h4><hr>
+    <div class="card card-body">
+        <table class="table table-sm"> 
+            <tr>
+                <th>Product</th>
+                <th>Date Ordered</th>
+                <th>Status</th>
+                <th>Update</th>
+                <th>Remove</th>
+            </tr>
+            {% for order in total_orders  %}
+            <tr>
+                <td>{{order.product}}</td>
+                <td>{{order.date_created}}</td>
+                <td>{{order.status}}</td>
+                <td><a class="btn btn-outline-primary btn-sm btn-block" href="{% url 'update_order' order.id %}">Update</a></td>
+                <td><a class="btn btn-outline-danger btn-sm btn-block" href="{% url 'delete_order' order.id %}">Remove</a></td>
+
+                
+
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    </div>
 </div>
 
 {% endblock %}
