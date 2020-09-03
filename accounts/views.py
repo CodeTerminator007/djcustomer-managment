@@ -7,9 +7,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm 
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
+from .decorators import *
 from .models import *
 from .forms import *
 @login_required(login_url='signin')
+@allowed_user(allowed_roles=['admin'])
 def home(request):
     
     total_orders = Order.objects.all()
@@ -27,7 +29,9 @@ def home(request):
 
     }
     return render(request, 'accounts/dashboard.html' , context)
-
+    
+@login_required(login_url='signin')
+@allowed_user(allowed_roles=['admin'])
 def products(request):
     products = Product.objects.all()
     return render(request ,'accounts/products.html' ,context={'products' : products})
@@ -80,10 +84,8 @@ def delete_order(request , pk):
 
     context = {'item' : order}
     return render(request, 'accounts/delete.html' , context)
-
+@unauthenticated_user
 def signin(request):
-    if request.user.is_authenticated:
-        return redirect('home')
     if request.method == "POST":
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -98,10 +100,8 @@ def signin(request):
     context = {}
 
     return render(request , 'accounts/signin.html',context)
-
-def register(request):
-    if request.user.is_authenticated:
-        return redirect('home')    
+@unauthenticated_user
+def register(request):  
     form = CreateUserForm()
     if request.method == "POST":
         form = CreateUserForm(request.POST)
@@ -118,3 +118,9 @@ def logoutuser(request):
     context ={}
 
     return redirect('signin')
+
+def userPage(request):
+
+    context = {}
+
+    return render(request , 'accounts/user.html' , context)
