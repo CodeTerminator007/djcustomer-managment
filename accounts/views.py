@@ -37,7 +37,7 @@ def products(request):
     return render(request ,'accounts/products.html' ,context={'products' : products})
 
 
-def customer(request , pk):
+def customer(request , pk ):
     try:
         customer = Customer.objects.get(id=pk)
 
