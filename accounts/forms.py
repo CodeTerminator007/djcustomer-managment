@@ -6,7 +6,7 @@ from .models import *
 class OrderForm(ModelForm):
     class Meta:
         model = Order
-        fields= '__all__'
+        fields= ['user' ,'product','status']
 
 
 class CreateUserForm(UserCreationForm):

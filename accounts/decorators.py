@@ -17,12 +17,15 @@ def allowed_user(allowed_roles=[]):
 
             if request.user.groups.exists():
                 group = request.user.groups.all()[0].name
+                        
+                if group in allowed_roles:
+                    return view_func(request,*args , **kwargs)
 
-            if group in allowed_roles:
-                return view_func(request,*args , **kwargs)
+                else:
+                    return HttpResponse("You are not Authenticated")
 
             else:
-                return HttpResponse("You are not Authenticated")
+                return HttpResponse("User does not Exisit")
 
         return wrapper_func
     return decorator
