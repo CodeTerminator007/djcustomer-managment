@@ -2,16 +2,16 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.http import Http404
 from django.contrib import messages
-from django.contrib.auth import login , logout
+from django.contrib.auth import login , logout 
 from django.contrib.auth.decorators import login_required 
 from django.contrib.auth.forms import UserCreationForm 
 from django.contrib.auth import authenticate
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User ,Group 
 from .decorators import *
 from .models import *
 from .forms import *
 @login_required(login_url='signin')
-@allowed_user(allowed_roles=['admin'])
+@admin_only
 def home(request):
     
     total_orders = Order.objects.all()
@@ -37,13 +37,15 @@ def products(request):
     return render(request ,'accounts/products.html' ,context={'products' : products})
 
 
-def customer(request , pk):
+def customer(request , pk ):
     try:
         customer = Customer.objects.get(id=pk)
+        user = User.objects.get(id=pk)
 
-    except Customer.DoesNotExist:
+    except User.DoesNotExist:
         raise Http404("User Does Not Exist")
-
+    
+    
     customerorder = customer.order_set.all()
     counter = customerorder.count()
     context = {
@@ -51,6 +53,7 @@ def customer(request , pk):
     }
     return render(request,'accounts/customer.html' , context)
 @login_required(login_url='signin')
+@allowed_user(allowed_roles=['admin'])
 def create_order(request , pk):
     customer = Customer.objects.get(id=pk)
     form  = OrderForm(initial={'customer':customer})
@@ -63,6 +66,7 @@ def create_order(request , pk):
     context = {'form':form}
     return render(request , 'accounts/order_form.html', context)
 @login_required(login_url='signin')
+@allowed_user(allowed_roles=['admin'])
 def update_order(request , pk):
     order = Order.objects.get(id=pk)
     form = OrderForm(instance=order)
@@ -76,6 +80,7 @@ def update_order(request , pk):
     return render(request,'accounts/order_form.html',context)
     redirect('/')
 @login_required(login_url='signin')
+@allowed_user(allowed_roles=['admin'])
 def delete_order(request , pk):
     order = Order.objects.get(id=pk)
     if request.method == "POST":
@@ -93,7 +98,16 @@ def signin(request):
         user = authenticate(request , username=username, password=password)
         if user is not None:
             login(request,user)
-            return redirect('customer' , user.id )
+            group = None
+
+            if user.groups.exists():
+                group = user.groups.all()[0].name
+
+            if group == 'customer':
+                return redirect('user-page')
+            if group == 'admin':
+                return redirect('home')
+
         else:
             messages.info(request, 'Three credits remain in your account.')
 
@@ -106,7 +120,10 @@ def register(request):
     if request.method == "POST":
         form = CreateUserForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            group = Group.objects.get(name='customer')
+            print(group)
+            user.groups.add(group)
             return redirect("/")
 
     context = {'form':form}
@@ -118,7 +135,7 @@ def logoutuser(request):
     context ={}
 
     return redirect('signin')
-
+@allowed_user(allowed_roles=['customer'])
 def userPage(request):
 
     context = {}
