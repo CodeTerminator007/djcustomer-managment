@@ -12,6 +12,7 @@ urlpatterns = [
     path('login/',signin ,name='signin'),
     path('register/' , register , name="register"),
     path('user/' , userPage , name="user-page"),
+    path('settings/',settings_user , name='user_settings')
 
 
 ] 

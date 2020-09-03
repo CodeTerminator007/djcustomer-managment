@@ -20,6 +20,10 @@
           <a class="nav-link" href="{% url 'products' %}">products</a>
         </li>
         {% endif %}
+        <li class="nav-item ">
+          <a class="nav-link" href="{% url 'user_settings'  %}">Settings </a>
+        </li>        
+        
       </ul>
     </div>
     <span id="user"> Hello, {{user.username}} !!</span>

@@ -156,3 +156,16 @@ def userPage(request):
     context = {'orders': orders}
 
     return render(request , 'accounts/user.html' , context)
+
+
+def settings_user(request):
+    customer = request.user.customer
+    form =  CustomerForm(instance=customer)
+    if request.method == 'POST':
+        form = CustomerForm(request.POST,request.FILES,instance=customer)
+        if form.is_valid():
+            form.save()
+            
+    context = {'form' : form }
+
+    return render(request , 'accounts/settings_update.html' , context)
