@@ -11,7 +11,7 @@ urlpatterns = [
     path('delete_order/<str:pk>',delete_order, name="delete_order"),
     path('login/',signin ,name='signin'),
     path('register/' , register , name="register"),
-
+    path('user/' , userPage , name="user-page"),
 
 
 ] 
