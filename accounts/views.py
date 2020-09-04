@@ -37,7 +37,8 @@ def home(request):
 @allowed_user(allowed_roles=['admin'])
 def products(request):
     products = Product.objects.all()
-    return render(request ,'accounts/products.html' ,context={'products' : products})
+    context = {'products':products}
+    return render(request ,'accounts/products.html', context)
 
 @allowed_user(allowed_roles=['admin'])
 def customer(request , pk ):
@@ -135,9 +136,18 @@ def register(request):
         if form.is_valid():
             user = form.save()
             group = Group.objects.get(name='customer')
-            Customer.objects.create(user=user)            
-            user.groups.add(group)
-            return redirect("/")
+            print(request.POST)
+            email = request.POST.get("email", None)
+            name = request.POST.get('username' , None)
+            print(user , email)
+
+            if email is not None:
+                Customer.objects.create(user=user , email= email ,name=name)  
+                user.groups.add(group)
+                return redirect("/")                          
+            else:
+                raise Http404
+
 
     context = {'form':form}
     return render(request,'accounts/register.html',context)
@@ -153,7 +163,10 @@ def logoutuser(request):
 @allowed_user(allowed_roles=['customer'])
 def userPage(request):
     orders =request.user.customer.order_set.all()
-    context = {'orders': orders}
+    order_deliverd = orders.filter(status="Delivered").count()
+    order_pending = orders.filter(status="Pending").count()
+    total_order = orders.count()
+    context = {'orders': orders , 'total_order':total_order , 'order_deliverd':order_deliverd ,'order_pending':order_pending} 
 
     return render(request , 'accounts/user.html' , context)
 

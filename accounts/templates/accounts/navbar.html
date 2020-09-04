@@ -1,17 +1,28 @@
 <Style>
   #user{
     color:aliceblue;
-    font-size: medium;
     
   }
 </Style>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">logo</a>
+              
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
+      <span class="navbar-toggler-icon">
+      </span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
+      {% if request.user.is_staff %}
+      <a href="{% url 'home' %}">
+      <img width="50" height="50" class="img-thumbnail rounded-circle" src="../images/profile1.jpg" alt="profile1.jpg">
+        </a>
+        {% else %}
+        <a href="{% url 'user-page'  %}">
+        <img width="50 " height="50" class="img-thumbnail rounded" src="{{request.user.customer.profile_pic.url}}" alt="profile1.jpg">
+        </a>
+      {% endif %}
+      </a>      
+
+      <ul class="navbar-nav">        
         {% if request.user.is_staff %}
         <li class="nav-item ">
           <a class="nav-link" href="{% url 'home'  %}">Dashboard </a>
@@ -19,15 +30,16 @@
         <li class="nav-item">
           <a class="nav-link" href="{% url 'products' %}">products</a>
         </li>
-        {% endif %}
+        {% else %}
         <li class="nav-item ">
           <a class="nav-link" href="{% url 'user_settings'  %}">Settings </a>
-        </li>        
-        
+        </li>      
+        {% endif %}
+
       </ul>
     </div>
-    <span id="user"> Hello, {{user.username}} !!</span>
+    <span class="h4 mt-2" id="user"> Hello, {{user.username}} !</span>
     <span>
-      <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+      <a class="ml-4 btn btn-md btn-info" class="nav-link" href="{% url 'logout' %}">Logout</a>
     </span>
   </nav>
